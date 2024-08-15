@@ -8,6 +8,7 @@ public enum RoundType
     Pistol,
     HalfBuy,
     FullBuy,
+    Snipers
 }
 
 public static class RoundTypeHelpers
@@ -71,6 +72,9 @@ public static class RoundTypeHelpers
     {
         return roundType.ToLower() switch
         {
+            "s" => RoundType.Snipers,
+            "sniper" => RoundType.Snipers,
+            "snipers" => RoundType.Snipers,
             "f" => RoundType.FullBuy,
             "full" => RoundType.FullBuy,
             "fullbuy" => RoundType.FullBuy,

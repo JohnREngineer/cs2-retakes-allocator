@@ -98,18 +98,25 @@ public class RoundTypeManager
         var randomValue = new Random().NextDouble();
 
         var pistolPercentage = Configs.GetConfigData().GetRoundTypePercentage(RoundType.Pistol);
+        var halfbuyPercentage = Configs.GetConfigData().GetRoundTypePercentage(RoundType.HalfBuy) + pistolPercentage;
+        var fullbuyPercentage = Configs.GetConfigData().GetRoundTypePercentage(RoundType.FullBuy) + halfbuyPercentage;
 
         if (randomValue < pistolPercentage)
         {
             return RoundType.Pistol;
         }
 
-        if (randomValue < Configs.GetConfigData().GetRoundTypePercentage(RoundType.HalfBuy) + pistolPercentage)
+        if (randomValue < halfbuyPercentage)
         {
             return RoundType.HalfBuy;
         }
 
-        return RoundType.FullBuy;
+        if (randomValue < fullbuyPercentage)
+        {
+            return RoundType.FullBuy;
+        }
+
+        return RoundType.Snipers;
     }
 
     public void SetNextRoundTypeOverride(RoundType? nextRoundType)
