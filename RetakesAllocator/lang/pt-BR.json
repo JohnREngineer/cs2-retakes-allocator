@@ -2,6 +2,7 @@
   "roundtype.Pistol": "Pistola",
   "roundtype.HalfBuy": "Compra Parcial",
   "roundtype.FullBuy": "Compra Completa",
+  "roundtype.Snipers": "AWP",
 
   "weapon_type.primary": "Primária",
   "weapon_type.secondary": "Secundária",

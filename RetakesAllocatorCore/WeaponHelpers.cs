@@ -1,4 +1,5 @@
 using System.Collections;
+using System.ComponentModel.DataAnnotations;
 using CounterStrikeSharp.API.Modules.Admin;
 using CounterStrikeSharp.API.Modules.Entities.Constants;
 using CounterStrikeSharp.API.Modules.Utils;
@@ -9,6 +10,7 @@ namespace RetakesAllocatorCore;
 
 public enum WeaponAllocationType
 {
+    SniperPrimary,
     FullBuyPrimary,
     HalfBuyPrimary,
     Secondary,
@@ -61,19 +63,11 @@ public static class WeaponHelpers
 
     private static readonly ICollection<CsItem> _sharedMidRange = new HashSet<CsItem>
     {
-        // SMG
-        CsItem.P90,
         CsItem.UMP45,
         CsItem.MP7,
         CsItem.Bizon,
         CsItem.MP5,
-
-        // Shotgun
-        CsItem.XM1014,
         CsItem.Nova,
-
-        // Sniper
-        CsItem.Scout,
     };
 
     private static readonly ICollection<CsItem> _tMidRange = new HashSet<CsItem>
@@ -100,6 +94,13 @@ public static class WeaponHelpers
     private static readonly ICollection<CsItem> _smgsForCt =
         _sharedMidRange.Concat(_ctMidRange).Where(i => (int)i <= _maxSmgItemValue).ToHashSet();
 
+    private static readonly ICollection<CsItem> _sharedRifles = new HashSet<CsItem>
+    {
+        CsItem.P90,
+        CsItem.XM1014,
+        CsItem.Scout,
+    };
+    
     private static readonly ICollection<CsItem> _tRifles = new HashSet<CsItem>
     {
         CsItem.AK47,
@@ -114,6 +115,9 @@ public static class WeaponHelpers
         CsItem.Famas,
         CsItem.AUG,
     };
+    
+    private static readonly ICollection<CsItem> _riflesForT = _sharedRifles.ToHashSet().Concat(_tRifles).ToHashSet();
+    private static readonly ICollection<CsItem> _riflesForCT = _sharedRifles.ToHashSet().Concat(_ctRifles).ToHashSet();
 
     private static readonly ICollection<CsItem> _sharedPreferred = new HashSet<CsItem>
     {
@@ -143,17 +147,17 @@ public static class WeaponHelpers
     };
 
     private static readonly ICollection<CsItem> _fullBuyPrimaryForT =
-        _tRifles.Concat(_heavys).ToHashSet();
+        _riflesForT.Concat(_heavys).ToHashSet();
 
     private static readonly ICollection<CsItem> _fullBuyPrimaryForCt =
-        _ctRifles.Concat(_heavys).ToHashSet();
+        _riflesForCT.Concat(_heavys).ToHashSet();
 
     private static readonly ICollection<CsItem> _allWeapons = Enum.GetValues<CsItem>()
         .Where(item => (int)item >= 200 && (int)item < 500)
         .ToHashSet();
 
     private static readonly ICollection<CsItem> _allFullBuy =
-        _allPreferred.Concat(_heavys).Concat(_tRifles).Concat(_ctRifles).ToHashSet();
+        _allPreferred.Concat(_heavys).Concat(_sharedRifles).Concat(_tRifles).Concat(_ctRifles).ToHashSet();
 
     private static readonly ICollection<CsItem> _allHalfBuy =
         _midRangeForT.Concat(_midRangeForCt).ToHashSet();
@@ -207,6 +211,7 @@ public static class WeaponHelpers
                 {WeaponAllocationType.Secondary, _pistolsForT},
                 {WeaponAllocationType.HalfBuyPrimary, _midRangeForT},
                 {WeaponAllocationType.FullBuyPrimary, _fullBuyPrimaryForT},
+                {WeaponAllocationType.SniperPrimary, _preferredForT},
                 {WeaponAllocationType.Preferred, _preferredForT},
             }
         },
@@ -217,6 +222,7 @@ public static class WeaponHelpers
                 {WeaponAllocationType.Secondary, _pistolsForCt},
                 {WeaponAllocationType.HalfBuyPrimary, _midRangeForCt},
                 {WeaponAllocationType.FullBuyPrimary, _fullBuyPrimaryForCt},
+                {WeaponAllocationType.SniperPrimary, _preferredForCt},
                 {WeaponAllocationType.Preferred, _preferredForCt},
             }
         }
@@ -230,6 +236,7 @@ public static class WeaponHelpers
         {
             CsTeam.Terrorist, new()
             {
+                {WeaponAllocationType.SniperPrimary, CsItem.AWP},
                 {WeaponAllocationType.FullBuyPrimary, CsItem.AK47},
                 {WeaponAllocationType.HalfBuyPrimary, CsItem.Mac10},
                 {WeaponAllocationType.Secondary, CsItem.Deagle},
@@ -239,6 +246,7 @@ public static class WeaponHelpers
         {
             CsTeam.CounterTerrorist, new()
             {
+                {WeaponAllocationType.SniperPrimary, CsItem.AWP},
                 {WeaponAllocationType.FullBuyPrimary, CsItem.M4A1S},
                 {WeaponAllocationType.HalfBuyPrimary, CsItem.MP9},
                 {WeaponAllocationType.Secondary, CsItem.Deagle},
@@ -426,7 +434,7 @@ public static class WeaponHelpers
     {
         if (_allPistols.Contains(weapon))
         {
-            return new HashSet<RoundType> {RoundType.Pistol, RoundType.HalfBuy, RoundType.FullBuy};
+            return new HashSet<RoundType> {RoundType.Pistol, RoundType.HalfBuy, RoundType.FullBuy, RoundType.Snipers};
         }
 
         if (_allHalfBuy.Contains(weapon))
@@ -437,6 +445,11 @@ public static class WeaponHelpers
         if (_allFullBuy.Contains(weapon))
         {
             return new HashSet<RoundType> {RoundType.FullBuy};
+        }
+
+        if (_allPreferred.Contains(weapon))
+        {
+            return new HashSet<RoundType> {RoundType.Snipers};
         }
 
         return new HashSet<RoundType>();
@@ -503,6 +516,7 @@ public static class WeaponHelpers
             RoundType.Pistol => WeaponAllocationType.PistolRound,
             RoundType.HalfBuy => WeaponAllocationType.HalfBuyPrimary,
             RoundType.FullBuy => WeaponAllocationType.FullBuyPrimary,
+            RoundType.Snipers => WeaponAllocationType.SniperPrimary,
             _ => null,
         };
     }
@@ -521,6 +535,7 @@ public static class WeaponHelpers
                 {
                     RoundType.HalfBuy => WeaponAllocationType.HalfBuyPrimary,
                     RoundType.FullBuy => WeaponAllocationType.FullBuyPrimary,
+                    RoundType.Snipers => WeaponAllocationType.SniperPrimary,
                     _ => null,
                 };
 
@@ -605,7 +620,8 @@ public static class WeaponHelpers
             WeaponAllocationType.PistolRound => team == CsTeam.Terrorist ? _pistolsForT : _pistolsForCt,
             WeaponAllocationType.Secondary => team == CsTeam.Terrorist ? _pistolsForT : _pistolsForCt,
             WeaponAllocationType.HalfBuyPrimary => team == CsTeam.Terrorist ? _smgsForT : _smgsForCt,
-            WeaponAllocationType.FullBuyPrimary => team == CsTeam.Terrorist ? _tRifles : _ctRifles,
+            WeaponAllocationType.FullBuyPrimary => team == CsTeam.Terrorist ? _riflesForT : _riflesForCT,
+            WeaponAllocationType.SniperPrimary => team == CsTeam.Terrorist ? _preferredForT : _preferredForCt,
             WeaponAllocationType.Preferred => team == CsTeam.Terrorist ? _preferredForT : _preferredForCt,
             _ => _sharedPistols,
         };

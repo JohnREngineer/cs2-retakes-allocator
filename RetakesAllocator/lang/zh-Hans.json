@@ -2,6 +2,7 @@
   "roundtype.Pistol": "手枪",
   "roundtype.HalfBuy": "半起",
   "roundtype.FullBuy": "长枪",
+  "roundtype.Snipers": "AWP",
 
   "weapon_type.primary": "主武器",
   "weapon_type.secondary": "手枪",

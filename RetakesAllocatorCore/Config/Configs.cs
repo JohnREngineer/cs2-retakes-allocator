@@ -188,6 +188,7 @@ public record ConfigData
                         {RoundType.Pistol, MaxTeamNadesSetting.AverageOnePerPlayer},
                         {RoundType.HalfBuy, MaxTeamNadesSetting.AverageOnePointFivePerPlayer},
                         {RoundType.FullBuy, MaxTeamNadesSetting.AverageOnePointFivePerPlayer},
+                        {RoundType.Snipers, MaxTeamNadesSetting.AverageOnePerPlayer}
                     }
                 },
                 {
@@ -196,6 +197,7 @@ public record ConfigData
                         {RoundType.Pistol, MaxTeamNadesSetting.AverageOnePerPlayer},
                         {RoundType.HalfBuy, MaxTeamNadesSetting.AverageOnePointFivePerPlayer},
                         {RoundType.FullBuy, MaxTeamNadesSetting.AverageOnePointFivePerPlayer},
+                        {RoundType.Snipers, MaxTeamNadesSetting.AverageOnePerPlayer}
                     }
                 },
             }
@@ -207,22 +209,25 @@ public record ConfigData
     public Dictionary<RoundType, int> RoundTypePercentages { get; set; } = new()
     {
         {RoundType.Pistol, 15},
-        {RoundType.HalfBuy, 25},
-        {RoundType.FullBuy, 60},
+        {RoundType.HalfBuy, 20},
+        {RoundType.FullBuy, 50},
+        {RoundType.Snipers, 15}
     };
 
     public Dictionary<RoundType, int> RoundTypeRandomFixedCounts { get; set; } = new()
     {
         {RoundType.Pistol, 5},
-        {RoundType.HalfBuy, 10},
-        {RoundType.FullBuy, 15},
+        {RoundType.HalfBuy, 8},
+        {RoundType.FullBuy, 12},
+        {RoundType.Snipers, 5}
     };
 
     public List<RoundTypeManualOrderingItem> RoundTypeManualOrdering { get; set; } = new()
     {
         new RoundTypeManualOrderingItem(RoundType.Pistol, 5),
-        new RoundTypeManualOrderingItem(RoundType.HalfBuy, 10),
-        new RoundTypeManualOrderingItem(RoundType.FullBuy, 15),
+        new RoundTypeManualOrderingItem(RoundType.HalfBuy, 8),
+        new RoundTypeManualOrderingItem(RoundType.FullBuy, 12),
+        new RoundTypeManualOrderingItem(RoundType.Snipers, 5)
     };
 
     public bool MigrateOnStartup { get; set; } = true;

@@ -130,18 +130,20 @@ public class OnRoundPostStartHelper
             if (team == CsTeam.CounterTerrorist)
             {
                 // On non-pistol rounds, everyone gets defuse kit and util
-                if (roundType != RoundType.Pistol)
-                {
-                    giveDefuseKit(player);
-                }
-                else if (getSteamId(defusingPlayer) == getSteamId(player))
-                {
-                    // On pistol rounds, only one person gets a defuse kit
-                    giveDefuseKit(player);
-                }
+                // if (roundType != RoundType.Pistol)
+                // {
+                //     giveDefuseKit(player);
+                // }
+                // else if (getSteamId(defusingPlayer) == getSteamId(player))
+                // {
+                //     // On pistol rounds, only one person gets a defuse kit
+                //     giveDefuseKit(player);
+                // }
+                giveDefuseKit(player); // everyone gets defuse kit
             }
 
-            if (Configs.GetConfigData().ZeusPreference == ZeusPreference.Always)
+            // zeus is OP on pistol rounds
+            if (Configs.GetConfigData().ZeusPreference == ZeusPreference.Always && roundType != RoundType.Pistol)
             {
                 items.Add(CsItem.Zeus);
             }
