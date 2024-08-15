@@ -197,6 +197,13 @@ public static class WeaponHelpers
                     WeaponAllocationType.Secondary, WeaponAllocationType.FullBuyPrimary, WeaponAllocationType.Preferred
                 }
             },
+            {
+                RoundType.Snipers,
+                new HashSet<WeaponAllocationType>
+                {
+                    WeaponAllocationType.Secondary, WeaponAllocationType.Preferred
+                }
+            },
         };
 
     private static readonly Dictionary<
@@ -211,7 +218,6 @@ public static class WeaponHelpers
                 {WeaponAllocationType.Secondary, _pistolsForT},
                 {WeaponAllocationType.HalfBuyPrimary, _midRangeForT},
                 {WeaponAllocationType.FullBuyPrimary, _fullBuyPrimaryForT},
-                {WeaponAllocationType.SniperPrimary, _preferredForT},
                 {WeaponAllocationType.Preferred, _preferredForT},
             }
         },
@@ -222,7 +228,6 @@ public static class WeaponHelpers
                 {WeaponAllocationType.Secondary, _pistolsForCt},
                 {WeaponAllocationType.HalfBuyPrimary, _midRangeForCt},
                 {WeaponAllocationType.FullBuyPrimary, _fullBuyPrimaryForCt},
-                {WeaponAllocationType.SniperPrimary, _preferredForCt},
                 {WeaponAllocationType.Preferred, _preferredForCt},
             }
         }
